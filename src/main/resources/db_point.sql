@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS `db_point`.`point` (
   `account_id`        VARCHAR(64)  NOT NULL  DEFAULT ''      COMMENT '关联的用户id',
   `create_time`       BIGINT       NOT NULL  DEFAULT 0       COMMENT '创建时间',
   `update_time`       BIGINT       NOT NULL  DEFAULT 0       COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_point_acc_id`(`account_id`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 1

@@ -4,7 +4,7 @@ USE `db_account`;
 
 CREATE TABLE IF NOT EXISTS `db_account`.`account`(
   `id`              VARCHAR(64)     NOT NULL DEFAULT '' COMMENT '主键ID',
-  `balance`         BIGINT          NOT NULL DEFAULT 0  COMMENT '当前余额',
+  `balance`         INT             NOT NULL DEFAULT 0  COMMENT '当前余额',
   `create_time`     BIGINT          NOT NULL DEFAULT 0  COMMENT '创建时间',
   `update_time`     BIGINT          NOT NULL DEFAULT 0  COMMENT '更新时间',
   PRIMARY KEY (`id`)

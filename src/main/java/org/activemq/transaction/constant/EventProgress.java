@@ -1,5 +1,8 @@
 package org.activemq.transaction.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,12 +14,24 @@ import lombok.Getter;
 @Getter
 public enum EventProgress {
 
-    CREATED(1, "CREATED", "created"),
-    SENT_TO_MQ(3, "SENT_TO_MQ", "sent to mq"),
-    FINISHED(2, "FINISHED", "finished"),
+    NEW(1, "NEW", "new"),
+    PUBLISHED(2, "PUBLISHED", "sent to mq"),
+    PROCESSED(3, "PROCESSED", "finished"),
     ;
+
+    private static final Map<Integer, EventProgress> codeMap = new HashMap<>();
+
+    static {
+        for (EventProgress eventProgress : EventProgress.values()) {
+            codeMap.put(eventProgress.getCode(), eventProgress);
+        }
+    }
 
     private int code;
     private String value;
     private String desc;
+
+    public static EventProgress findByCode(int code) {
+        return codeMap.get(code);
+    }
 }

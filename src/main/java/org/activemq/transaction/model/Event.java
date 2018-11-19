@@ -1,6 +1,7 @@
 package org.activemq.transaction.model;
 
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -9,6 +10,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
+@ToString(exclude = {"createTime", "updateTime"})
 public class Event {
     // 自增主键
     private long id;
@@ -16,6 +18,8 @@ public class Event {
     private int type;
     // 事件进度
     private int progress;
+    // 事件来源id
+    private String sourceId;
     // 事件内容
     private String content;
     // 创建时间

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   					   http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/schema/task/spring-task-3.1.xsd
+	   					   ">
+    <context:annotation-config />
+    <context:component-scan base-package="org.activemq.transaction"/>
+    <task:annotation-driven />
+
+    <!--数据库1访问的相关配置-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/db_account"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="dataSource"></ref>
+        </property>
+    </bean>
+    <bean id="accountDao" class="org.activemq.transaction.dao.AccountDao">
+        <property name="jdbcTemplate">
+            <ref bean="jdbcTemplate"></ref>
+        </property>
+    </bean>
+    <bean id="accountEventDao" class="org.activemq.transaction.dao.AccountEventDao">
+        <property name="jdbcTemplate">
+            <ref bean="jdbcTemplate"></ref>
+        </property>
+    </bean>
+
+    <!--数据库2访问的相关配置-->
+    <bean id="dataSource2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/db_point"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+    <bean id="jdbcTemplate2" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource">
+            <ref bean="dataSource2"></ref>
+        </property>
+    </bean>
+    <bean id="pointDao" class="org.activemq.transaction.dao.PointDao">
+        <property name="jdbcTemplate">
+            <ref bean="jdbcTemplate2"></ref>
+        </property>
+    </bean>
+    <bean id="pointEventDao" class="org.activemq.transaction.dao.PointEventDao">
+        <property name="jdbcTemplate">
+            <ref bean="jdbcTemplate2"></ref>
+        </property>
+    </bean>
+
+    <!--JMS 相关配置-->
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <!--TODO 修改为实际activemq的broker url-->
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+    </bean>
+
+    <bean id="cachingConnectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="activeMQConnectionFactory"/>
+        <property name="sessionCacheSize" value="10"/>
+    </bean>
+
+    <bean id="topicDistributedTransaction" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg index="0" value="topic-distributed-transaction"/>
+    </bean>
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="cachingConnectionFactory"/>
+        <property name="defaultDestination" ref="topicDistributedTransaction"/>
+    </bean>
+
+    <bean id="pointMessageListener" class="org.activemq.transaction.listener.PointMessageListener"/>
+
+    <bean id="topicContainer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="cachingConnectionFactory"/>
+        <property name="destination" ref="topicDistributedTransaction"/>
+        <property name="messageListener" ref="pointMessageListener"/>
+    </bean>
+
+</beans>

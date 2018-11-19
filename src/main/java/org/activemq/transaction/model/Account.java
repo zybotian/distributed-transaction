@@ -1,6 +1,7 @@
 package org.activemq.transaction.model;
 
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -9,11 +10,12 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
+@ToString(exclude = {"createTime", "updateTime"})
 public class Account {
     // 主键ID
     private String id;
     // 当前余额
-    private long balance;
+    private int balance;
     // 创建时间
     private long createTime;
     // 更新时间

@@ -1,6 +1,7 @@
 package org.activemq.transaction.model;
 
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -9,6 +10,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
+@ToString(exclude = {"updateTime", "createTime"})
 public class Point {
     // 主键id
     private long id;

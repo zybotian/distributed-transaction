@@ -11,8 +11,8 @@ import lombok.Getter;
 @Getter
 public enum EventType {
 
-    AMOUNT_INC(1, "AMOUNT_INC", "amount increase"),
-    AMOUNT_DEC(2, "AMOUNT_DEC", "amount decrease"),
+    NEW_ACCOUNT(1, "NEW_ACCOUNT", "create account"),
+    INC_POINT(2, "INC_POINT", "increase point"),
     ;
 
     private int code;
