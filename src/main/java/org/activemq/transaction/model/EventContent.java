@@ -1,14 +1,15 @@
 package org.activemq.transaction.model;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.*;
 
 /**
  * @author tianbo
  * @date 2018-11-19 Monday 17:01
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
-@Accessors(chain = true)
 public class EventContent {
     private String accountId;
     private int point;

@@ -35,7 +35,7 @@ public class PointEventService {
     }
 
     public List<Event> getPublishedEventList() {
-        return pointEventDao.getByProcess(EventType.INC_POINT.getCode(), EventProgress.PUBLISHED.getCode());
+        return pointEventDao.getByProgress(EventType.INC_POINT.getCode(), EventProgress.PUBLISHED.getCode());
     }
 
     @Transactional(rollbackFor = BusinessException.class)
@@ -46,9 +46,10 @@ public class PointEventService {
         if ((EventProgress.PUBLISHED.getCode() == event.getProgress())
                 && (EventType.INC_POINT.getCode() == event.getType())) {
             EventContent eventContent = JSON.parseObject(event.getContent(), EventContent.class);
-            Point point = new Point()
-                    .setAccountId(eventContent.getAccountId())
-                    .setPoint(eventContent.getPoint());
+            Point point = Point.builder()
+                    .accountId(eventContent.getAccountId())
+                    .point(eventContent.getPoint())
+                    .build();
             int insertPoint = pointService.savePoint(point);
             if (insertPoint <= 0) {
                 log.warn("save point failed:{}", point);

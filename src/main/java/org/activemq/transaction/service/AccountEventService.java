@@ -37,7 +37,7 @@ public class AccountEventService {
     }
 
     public List<Event> getNewEventList() {
-        return accountEventDao.getByProcess(EventType.NEW_ACCOUNT.getCode(), EventProgress.NEW.getCode());
+        return accountEventDao.getByProgress(EventType.NEW_ACCOUNT.getCode(), EventProgress.NEW.getCode());
     }
 
 

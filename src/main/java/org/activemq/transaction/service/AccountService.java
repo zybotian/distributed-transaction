@@ -36,13 +36,15 @@ public class AccountService {
         }
         log.info("insert account success, account:{}", account);
 
-        EventContent eventContent = new EventContent()
-                .setPoint(account.getBalance())
-                .setAccountId(account.getId());
-        Event event = new Event()
-                .setType(EventType.NEW_ACCOUNT.getCode())
-                .setProgress(EventProgress.NEW.getCode())
-                .setContent(JSON.toJSONString(eventContent));
+        EventContent eventContent = EventContent.builder()
+                .point(account.getBalance())
+                .accountId(account.getId())
+                .build();
+        Event event = Event.builder()
+                .type(EventType.NEW_ACCOUNT.getCode())
+                .progress(EventProgress.NEW.getCode())
+                .content(JSON.toJSONString(eventContent))
+                .build();
         // 往db_account数据库的event表插入新记录
         int insertEvent = accountEventService.saveEvent(event);
         if (insertEvent <= 0) {

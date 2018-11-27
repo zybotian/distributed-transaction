@@ -44,10 +44,11 @@ public class PointMessageListener implements MessageListener {
                     return;
                 }
                 // 收到一条消息,创建一个event并入库
-                Event event = new Event()
-                        .setType(EventType.INC_POINT.getCode())
-                        .setProgress(EventProgress.PUBLISHED.getCode())
-                        .setContent(eventContentStr);
+                Event event = Event.builder()
+                        .type(EventType.INC_POINT.getCode())
+                        .progress(EventProgress.PUBLISHED.getCode())
+                        .content(eventContentStr)
+                        .build();
                 pointEventService.saveEvent(event);
             } catch (JMSException e) {
                 log.warn("process message failed", e);

@@ -1,16 +1,14 @@
 package org.activemq.transaction.model;
 
-import lombok.Data;
-import lombok.ToString;
-import lombok.experimental.Accessors;
+import lombok.*;
 
 /**
  * @author tianbo
  * @date 2018-11-16 Friday 15:43 积分表, 额度增加方
  */
-@Data
-@Accessors(chain = true)
 @ToString(exclude = {"updateTime", "createTime"})
+@Builder
+@Data
 public class Point {
     // 主键id
     private long id;

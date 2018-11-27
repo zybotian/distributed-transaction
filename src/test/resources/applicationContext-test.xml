@@ -10,9 +10,9 @@
                            http://www.springframework.org/schema/task
                            http://www.springframework.org/schema/task/spring-task-3.1.xsd
 	   					   ">
-    <context:annotation-config />
+    <context:annotation-config/>
     <context:component-scan base-package="org.activemq.transaction"/>
-    <task:annotation-driven />
+    <task:annotation-driven/>
 
     <!--数据库1访问的相关配置-->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -20,21 +20,6 @@
         <property name="url" value="jdbc:mysql://127.0.0.1:3306/db_account"/>
         <property name="username" value="root"/>
         <property name="password" value="123456"/>
-    </bean>
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource">
-            <ref bean="dataSource"></ref>
-        </property>
-    </bean>
-    <bean id="accountDao" class="org.activemq.transaction.dao.AccountDao">
-        <property name="jdbcTemplate">
-            <ref bean="jdbcTemplate"></ref>
-        </property>
-    </bean>
-    <bean id="accountEventDao" class="org.activemq.transaction.dao.AccountEventDao">
-        <property name="jdbcTemplate">
-            <ref bean="jdbcTemplate"></ref>
-        </property>
     </bean>
 
     <!--数据库2访问的相关配置-->
@@ -44,20 +29,43 @@
         <property name="username" value="root"/>
         <property name="password" value="123456"/>
     </bean>
-    <bean id="jdbcTemplate2" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource">
-            <ref bean="dataSource2"></ref>
-        </property>
+
+    <!--数据库1的sql会话工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/><!-- 指定数据源 -->
     </bean>
-    <bean id="pointDao" class="org.activemq.transaction.dao.PointDao">
-        <property name="jdbcTemplate">
-            <ref bean="jdbcTemplate2"></ref>
-        </property>
+
+    <!--数据库2的sql会话工厂-->
+    <bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource2"/><!-- 指定数据源 -->
     </bean>
-    <bean id="pointEventDao" class="org.activemq.transaction.dao.PointEventDao">
-        <property name="jdbcTemplate">
-            <ref bean="jdbcTemplate2"></ref>
-        </property>
+
+    <!--3创建一个booTypeDAO-->
+    <bean id="accountDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <!--指定映射文件 -->
+        <property name="mapperInterface" value="org.activemq.transaction.dao.AccountDao"></property>
+        <!-- 指定sql会话工厂-->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+
+    <bean id="accountEventDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <!--指定映射文件 -->
+        <property name="mapperInterface" value="org.activemq.transaction.dao.AccountEventDao"></property>
+        <!-- 指定sql会话工厂-->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+    </bean>
+
+    <bean id="pointDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <!--指定映射文件 -->
+        <property name="mapperInterface" value="org.activemq.transaction.dao.PointDao"></property>
+        <!-- 指定sql会话工厂-->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory2"></property>
+    </bean>
+    <bean id="pointEventDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <!--指定映射文件 -->
+        <property name="mapperInterface" value="org.activemq.transaction.dao.PointEventDao"></property>
+        <!-- 指定sql会话工厂-->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory2"></property>
     </bean>
 
     <!--JMS 相关配置-->

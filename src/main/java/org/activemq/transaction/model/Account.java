@@ -1,16 +1,14 @@
 package org.activemq.transaction.model;
 
-import lombok.Data;
-import lombok.ToString;
-import lombok.experimental.Accessors;
+import lombok.*;
 
 /**
  * @author tianbo
  * @date 2018-11-16 Friday 15:43 钱包账户,额度扣减方
  */
-@Data
-@Accessors(chain = true)
 @ToString(exclude = {"createTime", "updateTime"})
+@Builder
+@Data
 public class Account {
     // 主键ID
     private String id;
