@@ -22,6 +22,13 @@ public class AccountEventScheduledTask implements ScheduledTask {
     @Autowired
     private AccountEventService accountEventService;
 
+    /**
+     * @comment 如果定时任务挂掉了,只需要重启定时任务即可
+     * @comment 如果event状态修改失败,消息发送失败,则等待下次定时任务扫描即可重入
+     * @comment 如果event状态修改成功但消息发送失败了,可以数据库上线,保证event可以再次被扫到
+     * @comment 如果event状态修改失败但消息发送成功了,定时任务下次扫到了event会再次发送给mq,mq收到了重复消息,问题转化为mq如何对消息去重?
+     * @comment mq如何去重消息? mq什么都不需要做,只要消息的消费者保证自己的处理逻辑是幂等操作即可
+     */
     @Override
     @Scheduled(cron = "*/5 * * * * *")
     public void process() {

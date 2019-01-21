@@ -27,6 +27,11 @@ public class PointEventScheduledTask implements ScheduledTask {
     @Autowired
     private PointDao pointDao;
 
+    /**
+     * @comment 如果定时任务挂了,只需要重启定时任务即可
+     * @comment 数据库本地事务保证,修改event状态和增加积分两个操作要么全部成功,要么全部失败
+     * @comment 如果同时失败了,下一次定时任务依然会扫描到,可以重入
+     */
     @Override
     @Scheduled(cron = "*/5 * * * * *")
     public void process() {

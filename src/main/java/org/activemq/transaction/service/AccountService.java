@@ -26,6 +26,7 @@ public class AccountService {
 
     /**
      * 提供給外界服务调用的service层接口,外界只需要调用这一个接口即可
+     * @comment 本地数据库事务可以保证插入account和插入event全部成功或者全部失败
      */
     @Transactional(rollbackFor = BusinessException.class)
     public void newAccount(Account account) throws BusinessException {
