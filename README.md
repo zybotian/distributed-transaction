@@ -4,7 +4,7 @@ This project is a distributed transaction solution. We can use MQ(ActiveMQ in th
 
 The overview design is like this:
  
-![design](https://github.com/zybotian/distributed-transaction/blob/master/src/main/images/910996243.jpg)
+![design](https://github.com/zybotian/distributed-transaction/blob/master/imgs/distributed_transaction.jpg)
 
 ### service 1(database 1):
 ```java
