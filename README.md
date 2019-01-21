@@ -3,6 +3,8 @@
 This project is a distributed transaction solution. We can use MQ(ActiveMQ in this demo code) and event table to implement this feature.
 
 The overview design is like this:
+ 
+![design](https://github.com/zybotian/distributed-transaction/blob/master/src/main/images/910996243.jpg)
 
 ### service 1(database 1):
 ```java
